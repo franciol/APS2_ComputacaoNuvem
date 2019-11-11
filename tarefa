@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+import sys, os
+import requests
+
+aa = sys.argv
+server = os.environ.get('IPSERVIDOR')
+
+for i in range(len(aa)):
+    if aa[i] == "adicionar":
+        payload = {"quando":aa[i+1],"atividade":aa[i+2]}
+        requests.post(str(server)+"/Tarefa/",data=payload)
+
+        
+    elif aa[i] == "listar":
+        r = requests.get("%s/Tarefa/" % (server))
+        print(r.text)
+
+    elif aa[i] == "buscar":
+        r = requests.get("%s/Tarefa/%d" % (server,int(aa[i+1])))
+        print(r.text)
+
+    elif aa[i] == "apagar":
+        r = requests.delete("%s/Tarefa/%d" % (server,int(aa[i+1])))
+        print(r.text)
+
+    elif aa[i] == "atualizar":
+        payload = {"quando":aa[i+2],"atividade":aa[i+3]}
+        requests.put("%s/Tarefa/%d" % (server,int(aa[i+1])),data=payload)
+
+
+    elif aa[i] == "help" : 
+        print('''Modo de uso:\n        tarefa [opção] <arg1> <arg2> <arg3>\n
+        Opções:
+            listar    : Lista as atividades e seus dados no sistema
+            buscar    : Busca os dados específicos de alguma atividade
+            adicionar : Adiciona dados de uma nova atividade
+            atualizar : Atualiza os dados de uma atividade
+            apagar    : Apaga os dados de uma atividade
+
+        Forma de uso:
+            listar    : tarefa listar
+            buscar    : tarefa buscar <int: id_atividade>
+            adicionar : tarefa adicionar <str: quando> <str: atividade>
+            atualizar : tarefa atualizar <int: id_atividade> <str: quando> <str: atividade>
+            apagar    : tarefa apagar <int: id_atividade>
+        ''')
