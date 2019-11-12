@@ -4,8 +4,10 @@ import requests
 
 aa = sys.argv
 server = os.environ.get('IPSERVIDOR')
+i = 1
 
-for i in range(len(aa)):
+
+if(1==1):
     if aa[i] == "adicionar":
         payload = {"quando":aa[i+1],"atividade":aa[i+2]}
         requests.post(str(server)+"/Tarefa/",data=payload)
@@ -13,11 +15,13 @@ for i in range(len(aa)):
         
     elif aa[i] == "listar":
         r = requests.get("%s/Tarefa/" % (server))
-        print(r.text)
+        for j in r.json():  
+            print("%3d : Atividade: %s\n         Quando: %s\n" % (int(j),str(r.json()[j]['atividade'][0]),str(r.json()[j]['quando'][0])))
 
     elif aa[i] == "buscar":
         r = requests.get("%s/Tarefa/%d" % (server,int(aa[i+1])))
-        print(r.text)
+        print("%3d : Atividade: %s\n         Quando: %s\n" % (int(aa[i+1]),str(r.json()['atividade'][0]),str(r.json()['quando'][0])))
+        
 
     elif aa[i] == "apagar":
         r = requests.delete("%s/Tarefa/%d" % (server,int(aa[i+1])))
@@ -44,3 +48,20 @@ for i in range(len(aa)):
             atualizar : tarefa atualizar <int: id_atividade> <str: quando> <str: atividade>
             apagar    : tarefa apagar <int: id_atividade>
         ''')
+    
+    else : 
+        print('''Parece que não existe a opção:\n    "%s"\nVerifique abaixo as opções aceitas: \n\nModo de uso:\n        tarefa [opção] <arg1> <arg2> <arg3>\n
+        Opções:
+            listar    : Lista as atividades e seus dados no sistema
+            buscar    : Busca os dados específicos de alguma atividade
+            adicionar : Adiciona dados de uma nova atividade
+            atualizar : Atualiza os dados de uma atividade
+            apagar    : Apaga os dados de uma atividade
+
+        Forma de uso:
+            listar    : tarefa listar
+            buscar    : tarefa buscar <int: id_atividade>
+            adicionar : tarefa adicionar <str: quando> <str: atividade>
+            atualizar : tarefa atualizar <int: id_atividade> <str: quando> <str: atividade>
+            apagar    : tarefa apagar <int: id_atividade>
+        ''' % (aa))
